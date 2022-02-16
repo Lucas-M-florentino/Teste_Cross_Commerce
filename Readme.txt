@@ -5,7 +5,7 @@ para uma busca mais rápida dos dados.
 
 para rodar o Programa é necessário ter o python instalado na máquina
 
-para ver somente os resultados rodeo programa apiRest.py e abra no navegador http://127.0.0.1:5000/ para verificar os dados
+para ver somente os resultados rode o programa apiRest.py e abra no navegador http://127.0.0.1:5000/ para verificar os dados
 
 para iniciar toda etapa de ETL utilize o programa inicializa.py 
 para rodar no computador pessoal jáexiste uma configuração de instalação de bibliotecas necessárias em libs.txt,
