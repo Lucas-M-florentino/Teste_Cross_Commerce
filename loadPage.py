@@ -1,8 +1,10 @@
+from ast import arg
 from pydoc import doc
 from bs4 import BeautifulSoup
 import requests
 import threading as th
 import time
+import apiRest as ar
 
 def carregaPagina(page): # carrega a informação da página
     var = -1
@@ -70,6 +72,7 @@ def Ordena(listNum): #Ordena a lista
             listNum[k]=direita[j]
             j += 1
             k += 1
+    return listNum
 
 class MinhaThread(th.Thread): #classe que constroi thread para percorrer as páginas e baixar os números
     
@@ -94,13 +97,13 @@ def load(): # função principal para gerenciar a verificação e salva de numer
     inicio = 1
     global listaNumeros
     global visitPag
-    
+    global vlistOrdena
     
     mutex = th.Lock()
     tot = 8 # numero de threads
     listaFinal = ['']
     vthreads =[]
-    html = ['<html><head><html lang="pt-br"><meta http-equiv="refresh" content="5";url=index.php><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Lucas Florentino - Teste Cross Commerce</title></head><body><pre style="word-wrap: break-word; white-space: pre-wrap;">"']
+    html = ['<html><head><html lang="pt-br"><meta http-equiv="refresh" content="60";url=index.php><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Lucas Florentino - Teste Cross Commerce</title></head><body><pre style="word-wrap: break-word; white-space: pre-wrap;">"']
     html.append('"</pre></body></html>')
     print('Contando Paginas...')
     txt='Contando Paginas...'
@@ -110,7 +113,7 @@ def load(): # função principal para gerenciar a verificação e salva de numer
     
     page = localUltimaPag(inicio,1000)# buscar a ultima página com numeros para total de paginas com parametro de busca para ir mais rápido
     sizePag = len(carregaPagina(1).split('[')[-1].split(']')[0].split(','))
-
+    
     listaNumeros = [['']]*page
     visitPag = [0]*page
     s = page//tot # quantidade para cada thread
@@ -159,11 +162,17 @@ def load(): # função principal para gerenciar a verificação e salva de numer
     msg=html[0]+txt+html[1]
     with open('index.html','w',encoding='utf-8') as f:
         f.write(msg)
-    
-    with open('index.html','w',encoding='utf-8') as f:
-        f.write(msg)
-
-    Ordena(listaFinal)
+    v1 = listaFinal[0:len(listaFinal)//2]
+    v2 = listaFinal[len(listaFinal)+1:len(listaFinal)]
+    v1 = Ordena(v1)
+    v2 = Ordena(v2)
+    i=0
+    while len(v2) > 1:
+        if(v2[i] < v1[i]):
+            listaFinal[i] = v2[i]
+        else:
+            listaFinal[i] = v1[i]
+        i += 1
     txt = ''
     for i in listaFinal:
         if listaFinal[-1] != i:
@@ -181,6 +190,7 @@ def load(): # função principal para gerenciar a verificação e salva de numer
     msg=html[0]+'{Numeros ordenados: ['+txt+']}'+html[1]
     with open('index.html','w',encoding='utf-8') as f:
         f.write(msg)
+    ar.apiRest(debug=True)
     
 if __name__ == '__main__':
     load()

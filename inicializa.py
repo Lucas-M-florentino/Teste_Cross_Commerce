@@ -34,8 +34,8 @@ def main():
     processos[-1].start()
     time.sleep(4)
     
-    processos.append(threading.Thread(target=ar.apiRest.run(debug=True)))
-    processos[-1].start()
+    # processos.append(threading.Thread(target=ar.apiRest.run(debug=True)))
+    # processos[-1].start()
 
     for processo in processos:
         processo.join()
