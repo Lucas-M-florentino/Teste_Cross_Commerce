@@ -167,11 +167,13 @@ def load(): # função principal para gerenciar a verificação e salva de numer
     v1 = Ordena(v1)
     v2 = Ordena(v2)
     i=0
-    while len(v2) > 1:
-        if(v2[i] < v1[i]):
-            listaFinal[i] = v2[i]
+    while len(v2) > 0 and len(v1) > 0:
+        if(v2[0] < v1[0]):
+            listaFinal[i] = v2[0]
+            v2.pop(0)
         else:
-            listaFinal[i] = v1[i]
+            listaFinal[i] = v1[0]
+            v1.pop(0)
         i += 1
     txt = ''
     for i in listaFinal:
