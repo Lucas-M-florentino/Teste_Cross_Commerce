@@ -55,20 +55,24 @@ def Ordena(listNum): #Ordena a lista
             if esquerda[i] <= direita[j]:
               listNum[k] = esquerda[i]
               i += 1
+              perc_num_atual = perc_num_atual + perc_num
             else:
                 listNum[k] = direita[j]
                 j += 1
+                perc_num_atual = perc_num_atual + perc_num
             k += 1
 
         while i < len(esquerda):
             listNum[k] = esquerda[i]
             i += 1
             k += 1
+            perc_num_atual = perc_num_atual + perc_num
 
         while j < len(direita):
             listNum[k]=direita[j]
             j += 1
             k += 1
+            perc_num_atual = perc_num_atual + perc_num
 
 class MinhaThread(th.Thread): #classe que constroi thread para percorrer as páginas e baixar os números
     
@@ -86,6 +90,7 @@ class MinhaThread(th.Thread): #classe que constroi thread para percorrer as pág
             self.mtx.acquire()
             listaNumeros[i-1] = carregaPagina(i).split('[')[-1].split(']')[0].split(',')
             visitPag.append(i)
+            perc_page_atual = perc_page_atual + perc_page
             time.sleep(0.2)
             self.mtx.release()
 
@@ -93,6 +98,10 @@ def load(): # função principal para gerenciar a verificação e salva de numer
     inicio = 1
     global listaNumeros
     global visitPag
+    global perc_page
+    global perc_num
+    global perc_page_atual
+    global perc_num_atual
     visitPag = []
     mutex = th.Lock()
     tot = 8 # numero de threads
@@ -108,6 +117,10 @@ def load(): # função principal para gerenciar a verificação e salva de numer
     
     page = localUltimaPag(inicio,1000)# buscar a ultima página com numeros para total de paginas com parametro de busca para ir mais rápido
     sizePag = len(carregaPagina(1).split('[')[-1].split(']')[0].split(','))
+    perc_page = page/100
+    perc_num = (sizePag * perc_page)/100
+    perc_page_atual = 0
+    perc_num_atual = 0
 
     listaNumeros = [['']]*page
     s = page//tot # quantidade para cada thread
@@ -117,7 +130,7 @@ def load(): # função principal para gerenciar a verificação e salva de numer
     p[-1] =  p[-1]+1
 
     print('Buscando numeros...')
-    txt='Buscando numeros...'
+    txt='Buscando numeros... '+ perc_page_atual+'%'
     msg=html[0]+txt+html[1]
     with open('index.html','w',encoding='utf-8') as f:
         f.write(msg)
@@ -152,7 +165,7 @@ def load(): # função principal para gerenciar a verificação e salva de numer
     Ordena(visitPag)
 
     print('Ordenando...')
-    txt='Ordenando...'
+    txt='Ordenando... '+perc_num_atual+'%'
     msg=html[0]+txt+html[1]
     with open('index.html','w',encoding='utf-8') as f:
         f.write(msg)

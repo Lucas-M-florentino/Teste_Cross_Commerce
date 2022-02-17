@@ -1,5 +1,3 @@
-bs4
-flask
-requests
-py2exe
-#instalados#
+bs4==0.0.1
+flask==2.0.2
+requests==2.27.1
