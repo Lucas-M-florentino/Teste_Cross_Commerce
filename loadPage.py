@@ -83,34 +83,18 @@ class MinhaThread(th.Thread): #classe que constroi thread para percorrer as pág
     def run(self): # metodo que atribui as partes para cada thread buscar
         global listaNumeros
         global visitPag
-        global perc_page_atual
-        global perc_page
         for i in range(self.inicio,self.fim):
             self.mtx.acquire()
             listaNumeros[i-1] = carregaPagina(i).split('[')[-1].split(']')[0].split(',')
             visitPag.append(i)
-            perc_page_atual = perc_page_atual + perc_page
             time.sleep(0.2)
             self.mtx.release()
-
-def porcentagem(txt,html):
-    global perc_page_atual
-    global perc_page
-    global listaNumeros
-    while len(listaNumeros[-1]) ==1:
-        t = txt+str(perc_num_atual)+'%'
-        msg=html[0]+t+html[1]
-        with open('index.html','w',encoding='utf-8') as f:
-            f.write(msg)
 
 def load(): # função principal para gerenciar a verificação e salva de numeros
     inicio = 1
     global listaNumeros
     global visitPag
-    global perc_page
-    global perc_num
-    global perc_page_atual
-    global perc_num_atual
+
     visitPag = []
     mutex = th.Lock()
     tot = 8 # numero de threads
@@ -126,10 +110,6 @@ def load(): # função principal para gerenciar a verificação e salva de numer
     
     page = localUltimaPag(inicio,1000)# buscar a ultima página com numeros para total de paginas com parametro de busca para ir mais rápido
     sizePag = len(carregaPagina(1).split('[')[-1].split(']')[0].split(','))
-    perc_page = 100/page
-    perc_num = 100/(sizePag * perc_page)
-    perc_page_atual = 0
-    perc_num_atual = 0
 
     listaNumeros = [['']]*page
     s = page//tot # quantidade para cada thread
@@ -140,13 +120,14 @@ def load(): # função principal para gerenciar a verificação e salva de numer
 
     print('Buscando numeros...')
     txt='Buscando numeros... '
-    thperc = th.Thread(target=porcentagem,args=(txt,html))
-    thperc.start()
-
+    msg=html[0]+txt+html[1]
+    with open('index.html','w',encoding='utf-8') as f:
+       f.write(msg)
+    
     for i in range(tot):
         vthreads.append(MinhaThread(i,p[i],p[i+1],mutex))
         vthreads[-1].start()
-    vthreads.append(thperc)
+
     for i in vthreads:
         i.join()
     
@@ -178,7 +159,6 @@ def load(): # função principal para gerenciar a verificação e salva de numer
     with open('index.html','w',encoding='utf-8') as f:
         f.write(msg)
     
-
     with open('index.html','w',encoding='utf-8') as f:
         f.write(msg)
 
