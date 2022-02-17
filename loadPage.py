@@ -14,7 +14,7 @@ def carregaPagina(page): # carrega a informação da página
             var = 1
         except requests.exceptions.RequestException:
             var =0
-            time.sleep(0.5)
+            time.sleep(0.2)
     
     return cont
 
@@ -84,18 +84,18 @@ class MinhaThread(th.Thread): #classe que constroi thread para percorrer as pág
         global listaNumeros
         global visitPag
         for i in range(self.inicio,self.fim):
-            self.mtx.acquire()
+            
             listaNumeros[i-1] = carregaPagina(i).split('[')[-1].split(']')[0].split(',')
-            visitPag.append(i)
+            visitPag[i-1] = i
             time.sleep(0.2)
-            self.mtx.release()
+            
 
 def load(): # função principal para gerenciar a verificação e salva de numeros
     inicio = 1
     global listaNumeros
     global visitPag
-
-    visitPag = []
+    
+    
     mutex = th.Lock()
     tot = 8 # numero de threads
     listaFinal = ['']
@@ -112,6 +112,7 @@ def load(): # função principal para gerenciar a verificação e salva de numer
     sizePag = len(carregaPagina(1).split('[')[-1].split(']')[0].split(','))
 
     listaNumeros = [['']]*page
+    visitPag = [0]*page
     s = page//tot # quantidade para cada thread
     p= [1] # primeiro começa em 1
     for i in range(1,tot+1):
