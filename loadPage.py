@@ -190,7 +190,7 @@ def load(): # função principal para gerenciar a verificação e salva de numer
     msg=html[0]+'{Numeros ordenados: ['+txt+']}'+html[1]
     with open('index.html','w',encoding='utf-8') as f:
         f.write(msg)
-    ar.apiRest(debug=True)
+    ar.apiRest.run(debug=True)
     
 if __name__ == '__main__':
     load()
