@@ -181,12 +181,6 @@ def load(): # função principal para gerenciar a verificação e salva de numer
             txt = txt + i + ','
         else:
             txt = txt + i
-
-    msg=html[0]+'{Numeros ordenados: ['+txt+']}"'+html[1]
-    with open('index.html','w',encoding='utf-8') as f:
-        f.write(msg)
-
-    time.sleep(6)
     
     html[0] = '<html><head><html lang="pt-br"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Lucas Florentino - Teste Cross Commerce</title></head><body><pre style="word-wrap: break-word; white-space: pre-wrap;">"'
     msg=html[0]+'{Numeros ordenados: ['+txt+']}'+html[1]
