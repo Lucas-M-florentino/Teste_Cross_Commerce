@@ -55,24 +55,21 @@ def Ordena(listNum): #Ordena a lista
             if esquerda[i] <= direita[j]:
               listNum[k] = esquerda[i]
               i += 1
-              perc_num_atual = perc_num_atual + perc_num
+
             else:
                 listNum[k] = direita[j]
                 j += 1
-                perc_num_atual = perc_num_atual + perc_num
             k += 1
 
         while i < len(esquerda):
             listNum[k] = esquerda[i]
             i += 1
             k += 1
-            perc_num_atual = perc_num_atual + perc_num
 
         while j < len(direita):
             listNum[k]=direita[j]
             j += 1
             k += 1
-            perc_num_atual = perc_num_atual + perc_num
 
 class MinhaThread(th.Thread): #classe que constroi thread para percorrer as páginas e baixar os números
     
@@ -86,6 +83,8 @@ class MinhaThread(th.Thread): #classe que constroi thread para percorrer as pág
     def run(self): # metodo que atribui as partes para cada thread buscar
         global listaNumeros
         global visitPag
+        global perc_page_atual
+        global perc_page
         for i in range(self.inicio,self.fim):
             self.mtx.acquire()
             listaNumeros[i-1] = carregaPagina(i).split('[')[-1].split(']')[0].split(',')
@@ -93,6 +92,16 @@ class MinhaThread(th.Thread): #classe que constroi thread para percorrer as pág
             perc_page_atual = perc_page_atual + perc_page
             time.sleep(0.2)
             self.mtx.release()
+
+def porcentagem(txt,html):
+    global perc_page_atual
+    global perc_page
+    global listaNumeros
+    while len(listaNumeros[-1]) ==1:
+        t = txt+str(perc_num_atual)+'%'
+        msg=html[0]+t+html[1]
+        with open('index.html','w',encoding='utf-8') as f:
+            f.write(msg)
 
 def load(): # função principal para gerenciar a verificação e salva de numeros
     inicio = 1
@@ -117,8 +126,8 @@ def load(): # função principal para gerenciar a verificação e salva de numer
     
     page = localUltimaPag(inicio,1000)# buscar a ultima página com numeros para total de paginas com parametro de busca para ir mais rápido
     sizePag = len(carregaPagina(1).split('[')[-1].split(']')[0].split(','))
-    perc_page = page/100
-    perc_num = (sizePag * perc_page)/100
+    perc_page = 100/page
+    perc_num = 100/(sizePag * perc_page)
     perc_page_atual = 0
     perc_num_atual = 0
 
@@ -130,15 +139,14 @@ def load(): # função principal para gerenciar a verificação e salva de numer
     p[-1] =  p[-1]+1
 
     print('Buscando numeros...')
-    txt='Buscando numeros... '+ perc_page_atual+'%'
-    msg=html[0]+txt+html[1]
-    with open('index.html','w',encoding='utf-8') as f:
-        f.write(msg)
+    txt='Buscando numeros... '
+    thperc = th.Thread(target=porcentagem,args=(txt,html))
+    thperc.start()
 
     for i in range(tot):
         vthreads.append(MinhaThread(i,p[i],p[i+1],mutex))
         vthreads[-1].start()
-
+    vthreads.append(thperc)
     for i in vthreads:
         i.join()
     
@@ -165,8 +173,12 @@ def load(): # função principal para gerenciar a verificação e salva de numer
     Ordena(visitPag)
 
     print('Ordenando...')
-    txt='Ordenando... '+perc_num_atual+'%'
+    txt='Ordenando... '
     msg=html[0]+txt+html[1]
+    with open('index.html','w',encoding='utf-8') as f:
+        f.write(msg)
+    
+
     with open('index.html','w',encoding='utf-8') as f:
         f.write(msg)
 
