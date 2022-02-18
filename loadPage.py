@@ -72,7 +72,6 @@ def Ordena(listNum): #Ordena a lista
             listNum[k]=direita[j]
             j += 1
             k += 1
-    return listNum
 
 class MinhaThread(th.Thread): #classe que constroi thread para percorrer as páginas e baixar os números
     
@@ -113,7 +112,7 @@ def load(): # função principal para gerenciar a verificação e salva de numer
     
     page = localUltimaPag(inicio,1000)# buscar a ultima página com numeros para total de paginas com parametro de busca para ir mais rápido
     sizePag = len(carregaPagina(1).split('[')[-1].split(']')[0].split(','))
-    page = 5000
+    
     listaNumeros = [['']]*page
     visitPag = [0]*page
     s = page//tot # quantidade para cada thread
@@ -162,19 +161,9 @@ def load(): # função principal para gerenciar a verificação e salva de numer
     msg=html[0]+txt+html[1]
     with open('index.html','w',encoding='utf-8') as f:
         f.write(msg)
-    v1 = listaFinal[0:len(listaFinal)//2]
-    v2 = listaFinal[len(listaFinal)+1:len(listaFinal)]
-    v1 = Ordena(v1)
-    v2 = Ordena(v2)
-    i=0
-    while len(v2) > 0 and len(v1) > 0:
-        if(v2[0] < v1[0]):
-            listaFinal[i] = v2[0]
-            v2.pop(0)
-        else:
-            listaFinal[i] = v1[0]
-            v1.pop(0)
-        i += 1
+    
+    Ordena(listaFinal)
+    
     txt = ''
     for i in listaFinal:
         if listaFinal[-1] != i:
