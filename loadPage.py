@@ -113,7 +113,7 @@ def load(): # função principal para gerenciar a verificação e salva de numer
     
     page = localUltimaPag(inicio,1000)# buscar a ultima página com numeros para total de paginas com parametro de busca para ir mais rápido
     sizePag = len(carregaPagina(1).split('[')[-1].split(']')[0].split(','))
-    
+    page = 5000
     listaNumeros = [['']]*page
     visitPag = [0]*page
     s = page//tot # quantidade para cada thread
@@ -186,7 +186,6 @@ def load(): # função principal para gerenciar a verificação e salva de numer
     msg=html[0]+'{Numeros ordenados: ['+txt+']}'+html[1]
     with open('index.html','w',encoding='utf-8') as f:
         f.write(msg)
-    ar.apiRest.run(debug=True)
     
 if __name__ == '__main__':
     load()
