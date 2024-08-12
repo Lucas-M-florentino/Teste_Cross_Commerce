@@ -1,0 +1,7 @@
+version: 1
+project: api_rotas
+
+watch:
+  - path: ./
+    events: [change]
+    action: docker-compose up -d --build

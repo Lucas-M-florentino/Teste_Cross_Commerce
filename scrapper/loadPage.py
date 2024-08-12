@@ -10,7 +10,7 @@ def carregaPagina(page): # carrega a informação da página
     var = -1
     while var !=1:
         try: 
-            link  = 'http://challenge.dienekes.com.br/api/numbers?page='+str(page)
+            link  = 'http://localhost:4910/api/'+str(page)
             html = requests.get(link).content
             cont = str(BeautifulSoup(html, 'html.parser'))
             var = 1

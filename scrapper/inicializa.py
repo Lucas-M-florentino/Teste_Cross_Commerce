@@ -2,7 +2,7 @@ import threading
 import os
 import time
 import apiRest as ar
-import loadPage as lp
+import scrapper.loadPage as lp
     
 def inicia_programa():
     os.system('python3 -m pip install -r {}'.format('libs.txt'))
