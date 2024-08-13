@@ -5,9 +5,5 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '3290:3290'
+      - '8501:8501'
     restart: always
-    develop:
-      watch:
-        - action: rebuild
-          path: ./

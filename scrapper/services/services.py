@@ -1,4 +1,5 @@
 import aiohttp
+import json
 from repositories.repositories import NumeroRepository
 
 class ScraperService:
@@ -12,17 +13,22 @@ class ScraperService:
                 numeros = await response.json()
                 print(f"[DEBUG] Página {page}: {numeros}")  # Debug: Verificando os dados recebidos
                 return numeros
+    
+    def salvar_em_json(self, numeros):
+        with open('database/numeros_ordenados.json', 'w') as f:
+            json.dump(numeros, f)
 
+    def ordenar_e_salvar(self, numeros):
+        numeros_ordenados = sorted(numeros)
+        self.salvar_em_json(numeros_ordenados)
+    
     async def stream_paginas(self):
         page = 1
+        todos_numeros = []
         while True:
             numeros = await self.carrega_pagina(page)
             if not numeros:
                 break
-            self.repo.add_numeros(numeros)
+            todos_numeros.extend(numeros)
             page += 1
-
-    def salvar_em_json(self):
-        # Ordena os números e salva em JSON
-        numeros_ordenados = self.repo.ordena_numeros()
-        self.repo.salvar_em_json(numeros_ordenados)
+        self.ordenar_e_salvar(todos_numeros)

@@ -10,11 +10,11 @@ COPY requirements.txt .
 # Instale as dependências
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copie o código da API para o container
+# Copie o código da aplicação para o container
 COPY . .
 
 # Exponha a porta na qual a aplicação rodará
-EXPOSE 3290
+EXPOSE 8501
 
-# Comando para rodar a aplicação
-CMD ["python", "main.py"]
+# Comando para rodar a aplicação Streamlit
+CMD ["streamlit", "run", "main.py", "--server.port=8501", "--server.address=0.0.0.0"]

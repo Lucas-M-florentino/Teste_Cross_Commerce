@@ -1,8 +1,10 @@
 from flask import Flask, jsonify
 import random
 
-n_routes = 100
+n_routes = 10000
 n_floats = 100  # Número de floats por rota
+
+
 
 app = Flask(__name__)
 

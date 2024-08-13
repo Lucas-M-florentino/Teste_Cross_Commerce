@@ -1,5 +1,6 @@
 import json
-import os
+from dask import delayed
+from dask.distributed import Client
 
 class NumeroRepository:
     def __init__(self):

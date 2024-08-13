@@ -2,5 +2,7 @@ bs4==0.0.2
 Flask==2.3.2
 requests==2.31.0
 pandas==2.2.2
-aiohttp
-SQLAlchemy
+aiohttp==3.10.3
+streamlit==1.37.1
+streamlit_js_eval==0.1.7
+dask[complete]
